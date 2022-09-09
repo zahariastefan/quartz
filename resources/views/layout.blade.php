@@ -5,7 +5,7 @@
 <head>
 
     @include('includes.head')
-
+    @stack('styles')
 </head>
 
 <body>

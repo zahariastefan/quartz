@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Angajatis;
 use App\Models\Departamentes;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class Tabel extends Controller
@@ -10,18 +13,16 @@ class Tabel extends Controller
     /**
      * @return View
      */
-    public function show()
+    public function show(Request $request)
     {
-        $departments = Departamentes::all();
-//        $allDepartments = [];
-//        foreach ($departments as $department) {
-////            dd($department->toArray());
-//            $allDepartments[]= $department->nume;
-//        }
-//        dd($allData);
-
+        $searchTerm = $request->input('searchTerm', '');
+        if(!empty($searchTerm)){
+            $angajati = Angajatis::where('nume', 'like', '%'.$searchTerm.'%')->paginate(5);
+        }else{
+            $angajati = Angajatis::paginate(15);
+        }
         return view('tabel', [
-            'departamente' => $departments
+            'angajati' => $angajati
         ]);
     }
 }

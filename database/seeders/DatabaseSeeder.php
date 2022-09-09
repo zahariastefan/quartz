@@ -30,6 +30,18 @@ class DatabaseSeeder extends Seeder
             'control de management' => 'Departamentul de control al managementului este o parte a companiei, creată și susținută de conducere, care îi permite să obțină informațiile necesare și fiabile atunci când ia deciziile operaționale adecvate. <br> Controlul managementului măsoară utilizarea eficientă și permanentă a resurselor organizației, pentru a atinge obiectivele stabilite anterior de conducere.',
             'management' => 'Se poate spune că conducerea generală este șeful companiei. De obicei, în companiile mici, conducerea generală cade pe figura proprietarului, în timp ce în cele mai mari cade asupra mai multor persoane.<br>Acest departament este cel care știe unde merge compania, stabilindu-și obiectivele în ansamblu. Pe baza ei elaborează un plan de afaceri, cu obiective organizaționale și cunoștințe despre organizație în ansamblu pe care le veți folosi pentru luarea deciziilor în situații critice.'
         ];
+        $arrayFunctii = [
+            'finante'=>'contabil',
+            'IT'=>'web developer',
+            'Comitetul director'=>'director',
+            'resurse umane'=>'recruiter',
+            'marketing'=>'marketer',
+            'commercial'=>'agent vanzari',
+            'achizitii'=>'achizitioner',
+            'logistica'=>'logistician',
+            'control de management'=>'contolor de manageri',
+            'management'=>'manager'
+        ];
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Angajatis::query()->truncate();
         Departamentes::query()->truncate();
@@ -42,12 +54,11 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-//        Log::info(json_encode($departamentNou));
-
-        Angajatis::factory(50)->create(function () use ($departamentNou) {
+        Angajatis::factory(50)->create(function () use ($departamentNou,$arrayFunctii) {
+            $dep = $departamentNou[array_rand($departamentNou)];
             return [
-                'id_departament' => $departamentNou[array_rand($departamentNou)]->id,
-                'functie' => $departamentNou[array_rand($departamentNou)]->nume,
+                'id_departament' => $dep->id,
+                'functie' => $arrayFunctii[$dep->nume],
             ];
         });
     }

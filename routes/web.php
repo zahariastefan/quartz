@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,4 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/tabel', [\App\Http\Controllers\Tabel::class, 'show']);
+
+Route::any('/ajax', function(){
+    return \App\Http\Controllers\AjaxController::ajax();
+});
+
 
