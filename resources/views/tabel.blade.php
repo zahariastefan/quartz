@@ -1,13 +1,19 @@
 @extends('layout')
 @section('content')
-    <form action="/tabel" method="get" class="d-inline-flex" id="form_tabel">
-        <label for="searchTerm">Cauta Dupa Nume
-            <input type="search" class="form-control" name="searchTerm" id="searchTerm" value="{{request()->get('searchTerm')}}">
-        </label>
-        <div class="col-md-4">
 
-            <label for="sortBy">Sorteaza
-                <select name="sortBy" id="sortBy" class="form-control">
+    <form action="/tabel" method="get" class="d-inline-flex" id="form_tabel">
+        <i class="fa fa-question-circle" aria-hidden="true"></i>
+
+        <div class="col-md-4 m-2">
+
+        <label for="searchTerm">
+            <input type="search" class="form-control" placeholder="Cauta dupa nume" name="searchTerm" id="searchTerm" value="{{request()->get('searchTerm')}}">
+        </label>
+        </div>
+        <div class="col-md-4 m-2">
+
+            <label for="sortBy">
+                <select name="sortBy" id="sortBy">
                     <option
                         @php if (isset($_GET['sortBy']) && ($_GET['sortBy'])  == '' ) {echo 'selected'; } @endphp value="">
                         Sorteaza
@@ -24,11 +30,13 @@
                 </select>
             </label>
         </div>
-        <button type="button" class="btn btn-primary salary">Media Salariilor Pe departament</button>
+        <button type="submit" class="submit_button_with_icon d-sm-block d-md-none"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
+        <button type="button" class="btn salary text-center">Vezi Media Salariilor Pe departament</button>
+        <button type="button" class="btn classic_tabel d-none text-center">Vezi Angajatii impreuna cu numele si descrierea departamentului fiecaruia</button>
     </form>
     @csrf
     <table class="table all_data">
-        <thead>
+        <thead class="">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Nume</th>
@@ -59,6 +67,7 @@
                 <td>{{ $angajat->salariu }}</td>
                 <td>{{ $angajat->zile_concediu }}</td>
             </tr>
+            <input type="hidden" id="hidden_description_{{$angajat->id_departament}}" value="{{ \App\Models\Departamentes::find($angajat->id_departament)->descriere }}">
         @endforeach
         </tbody>
     </table>
@@ -89,8 +98,13 @@
         $(document).on('click', '.salary', () => {
             if ($('.all_data').hasClass('d-none') === true) {
                 $('.all_data').removeClass('d-none');
+                $('.classic_tabel').addClass('d-none');
+                $('.salary').removeClass('d-none');
             } else {
                 $('.all_data').addClass('d-none');
+                $('.classic_tabel').removeClass('d-none');
+                $('.salary').addClass('d-none');
+
             }
             if ($('.by_salary').hasClass('d-none') === true) {
                 $('.by_salary').removeClass('d-none');
@@ -104,10 +118,20 @@
             }
 
         });
-
+        $(document).on('click', '.classic_tabel', () => {
+            $('.salary').trigger('click');
+        });
         $(document).on('click', '.descriere_departament', (e)=>{
             if($('.all_data td').length > 0){
-                {{--alert('{{ (\App\Models\Departamentes::find($angajat->id_departament)->descriere) }}');--}}
+                var currentID = $(e.currentTarget).attr('id');
+                var decription = $('#hidden_description_'+currentID).val();
+                if($(e.currentTarget).hasClass('clicked')){
+                    $(e.currentTarget).removeClass('clicked');
+                    $(e.currentTarget).text(decription.substring(0,50) + '...');
+                }else{
+                    $(e.currentTarget).addClass('clicked');
+                    $(e.currentTarget).text(decription);
+                }
             }
         });
         $( document).on('change', '#searchTerm', (e)=>{
@@ -118,4 +142,21 @@
 
     </script>
 
+
+    <script src="virtual-tour.js"></script>
+
+    <script>
+
+
+        if(typeof $.cookie('tutorial') === 'undefined' || $.cookie('tutorial') == 0){
+            startTour();
+        }
+
+        $('.shepherd-cancel-icon').click(()=>{
+            $.cookie('tutorial', 1);
+        });
+        $('.fa-question-circle').click(()=>{
+            startTour();
+        });
+    </script>
 @endsection
