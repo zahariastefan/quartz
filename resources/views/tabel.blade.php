@@ -2,25 +2,25 @@
 @section('content')
     <form action="/tabel" method="get" class="d-inline-flex" id="form_tabel">
         <label for="searchTerm">Cauta Dupa Nume
-            <input type="search" class="form-control" name="searchTerm" value="{{request()->get('searchTerm')}}">
+            <input type="search" class="form-control" name="searchTerm" id="searchTerm" value="{{request()->get('searchTerm')}}">
         </label>
         <div class="col-md-4">
 
             <label for="sortBy">Sorteaza
                 <select name="sortBy" id="sortBy" class="form-control">
                     <option
-                        @php if (isset($_GET['orderBy']) && ($_GET['orderBy'])  == '' ) {echo 'selected'; } @endphp value="">
+                        @php if (isset($_GET['sortBy']) && ($_GET['sortBy'])  == '' ) {echo 'selected'; } @endphp value="">
                         Sorteaza
                     </option>
                     <option
-                        @php if (isset($_GET['orderBy']) && ($_GET['orderBy'])  == 'desc') {echo 'selected'; } @endphp value="DESC">
-                        Descrescator
+                        @php if (isset($_GET['sortBy']) && ($_GET['sortBy'])  == 'desc') {echo 'selected'; } @endphp value="desc">
+                        Descrescator (Nume)
                     </option>
                     <option
-                        @php if (isset($_GET['orderBy']) && ($_GET['orderBy'])  == 'asc') {echo 'selected'; } @endphp  value="ASC">
-                        Crescator
+                        @php if (isset($_GET['sortBy']) && ($_GET['sortBy'])  == 'asc') {echo 'selected'; } @endphp  value="asc">
+                        Crescator (Nume)
                     </option>
-                    {{--                    <option @php if (isset($_GET['orderBy']) && ($_GET['orderBy'])  == 'salary') {echo 'selected'; } @endphp  value="salary">Media Salariilor Pe departament</option>--}}
+                    {{--                    <option @php if (isset($_GET['sortBy']) && ($_GET['sortBy'])  == 'salary') {echo 'selected'; } @endphp  value="salary">Media Salariilor Pe departament</option>--}}
                 </select>
             </label>
         </div>
@@ -34,6 +34,7 @@
             <th scope="col">Nume</th>
             <th scope="col">Prenume</th>
             <th scope="col">Departament</th>
+            <th scope="col">Descriere Departament</th>
             <th scope="col">Cod Numeric Personal</th>
             <th scope="col">Functie</th>
             <th scope="col">Salariu</th>
@@ -52,6 +53,7 @@
                 <td>{{ $angajat->nume }}</td>
                 <td>{{ $angajat->prenume }}</td>
                 <td>{{ \App\Models\Departamentes::find($angajat->id_departament)->nume }}</td>
+                <td class="descriere_departament" id="{{$angajat->id_departament}}">{{ Str::limit(\App\Models\Departamentes::find($angajat->id_departament)->descriere, 50) }}</td>
                 <td>{{ $angajat->cnp }}</td>
                 <td>{{ $angajat->functie }}</td>
                 <td>{{ $angajat->salariu }}</td>
@@ -101,6 +103,17 @@
                 $('.nav_pagination').addClass('d-none');
             }
 
+        });
+
+        $(document).on('click', '.descriere_departament', (e)=>{
+            if($('.all_data td').length > 0){
+                {{--alert('{{ (\App\Models\Departamentes::find($angajat->id_departament)->descriere) }}');--}}
+            }
+        });
+        $( document).on('change', '#searchTerm', (e)=>{
+            if(($('#searchTerm').val()).length === 0 ){
+                $('#form_tabel').submit();
+            }
         });
 
     </script>

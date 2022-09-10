@@ -7,6 +7,7 @@ use App\Models\Departamentes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 
 class Tabel extends Controller
 {
@@ -28,7 +29,7 @@ class Tabel extends Controller
                 $listAllSalaryByDepart[] = $singleEmployee->salariu;
             }
             if(count($listAllSalaryByDepart) == 0){
-                dd('something goes wrong');
+                throw new InternalErrorException('Count list is Zero, something wrong');
             }
 
             $averageSalary = array_sum($listAllSalaryByDepart) / count($listAllSalaryByDepart);
@@ -41,6 +42,10 @@ class Tabel extends Controller
 
         if(!empty($sortBy)){
             $angajati = Angajatis::orderBy('nume',$sortBy);
+        }
+
+        if(!empty($searchTerm) && !empty($sortBy) ){
+            $angajati = Angajatis::where('nume', 'like', '%'.$searchTerm.'%')->orderBy('nume',$sortBy);
         }
 
 
