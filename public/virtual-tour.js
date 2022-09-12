@@ -14,7 +14,7 @@ function startTour(){
         });
         tour.addStep({
             title: 'Prezentare',
-            text: `Numele meu este Zaharia Stefan si sper sa va placa acest proiect realizat pentru dumneavoastra. In urmatoarele clipe va urma o prezentare ghidata a website-ului. Dati click pe Urmatorul pentru continuare sau dati click pe X pentru a iesi din tutorial.`,
+            text: `Numele meu este Zaharia Stefan si acum va prezint proiectul. In urmatoarele clipe va urma o prezentare ghidata a website-ului. Dati click pe Continua pentru continuare sau dati click pe Renunta pentru a iesi din tutorial.`,
             attachTo: {
                 element: '.fa-question-circle',
                 on: 'bottom'
