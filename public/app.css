@@ -55,6 +55,9 @@ td.descriere_departament{
     padding-top: 18px;
     position: relative;
 }
+.classic_tabel,.salary{
+    border: 1px solid grey !important;
+}
 
 @media( max-width: 600px){
     #form_tabel{

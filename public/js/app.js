@@ -35,10 +35,9 @@ function getParam(name) {
     (typeof params !== 'undefined') ? result = params.get(name) : result = '';
     return result;
 }
-
-function checkParam(name, value) {
+function checkParam(name) {
     let result;
-    (typeof getParam(name) !== 'undefined' && getParam(name) === value) ? result = true : result = false;
+    (typeof getParam(name) !== 'undefined') ? result = true : result = false;
     return result;
 }
 
@@ -62,13 +61,6 @@ function showHide(){
         $('.nav_pagination').removeClass('d-none');
     } else {
         $('.nav_pagination').addClass('d-none');
-    }
-}
-
-function onChangeSelect()
-{
-    if(($('#searchTerm').val()).length === 0 ){
-        $('#form_tabel').submit();
     }
 }
 
@@ -98,37 +90,20 @@ class TableApp extends React.Component {
     }
 
     render() {
-        const urlAngajati = 'http://127.0.0.1:8000/angajati';
-        const urlSalariiDep = 'http://127.0.0.1:8000/salarii-departament';
+        var pageParam;
+        if(getParam('page') !== ''){
+            var nrPage = getParam('page');
+            pageParam = setParam('page', nrPage);
+        }else{
+            pageParam = '';
+        }
+        const urlAngajati = location.protocol+'//'+window.location.host + '/angajati?'+pageParam;
+        const urlSalariiDep = location.protocol+'//'+window.location.host + '/salarii-departament?'+pageParam;
         const ajaxCall = JSON.parse(Ajax(urlAngajati));
         const ajaxCallSD = JSON.parse(Ajax(urlSalariiDep));
         const {highlightedRowId} = this.state;
         return (
             <div className="col-md-7">
-                <form action="/tabel-react" method="get" className="d-inline-flex" id="form_tabel">
-                    <i className="fa fa-question-circle" aria-hidden="true"></i>
-                    <div className="col-md-4 m-2">
-                        <label htmlFor="searchTerm">
-                            <input type="search" className="form-control" placeholder="Cauta dupa nume"
-                                   name="searchTerm" id="searchTerm" value={getParam('searchTerm')}/>
-                        </label>
-                    </div>
-                    <div className="col-md-4 m-2">
-                        <label htmlFor="sortBy">
-                            <select name="sortBy" id="sortBy" onChange={()=>{onChangeSelect()}}>
-                                <option selected={checkParam('sortBy', '')} value="">
-                                    Sorteaza
-                                </option>
-                                <option selected={checkParam('sortBy', 'desc')} value="desc">
-                                    Descrescator (Nume)
-                                </option>
-                                <option selected={checkParam('sortBy', 'asc')} value="asc">
-                                    Crescator (Nume)
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-                </form>
                 <button type="button" className="btn salary text-center" onClick={()=>{showHide()}}>Vezi Media Salariilor Pe departament</button>
                 <button type="button" className="btn classic_tabel d-none text-center" onClick={()=>{$('.salary').trigger('click')}}>Vezi Angajatii impreuna cu numele
                     si descrierea departamentului fiecaruia
@@ -158,7 +133,7 @@ class TableApp extends React.Component {
                             <td>{singleHttpJsonResponse.nume}</td>
                             <td>{singleHttpJsonResponse.prenume}</td>
                             <td>{singleHttpJsonResponse.departament}</td>
-                            <td id={singleHttpJsonResponse.id} onClick={(e)=>{descriptionLength(e)}}>{singleHttpJsonResponse.descriere_departament.substring(0, 50) + '...'}</td>
+                            <td id={singleHttpJsonResponse.id_departament} onClick={(e)=>{descriptionLength(e)}}>{singleHttpJsonResponse.descriere_departament.substring(0, 50) + '...'}</td>
                             <td>{singleHttpJsonResponse.cnp}</td>
                             <td>{singleHttpJsonResponse.functie}</td>
                             <td>{singleHttpJsonResponse.salariu}</td>
@@ -191,14 +166,6 @@ class TableApp extends React.Component {
                 <nav aria-label="Page navigation example">
                     <ul className="pagination">
                         <li className="page-item"><a className="page-link" onClick={()=>{pagination('-1')}}>Previous</a></li>
-                        {[...Array(parseInt(ajaxCall['meta']['total']))].map((x, i) =>
-                        {(() => {
-                                if (i<10) {
-                                    return  <li className="page-item"><a className="page-link" onClick={() => {pagination({i})}}>{i}</a></li>
-                                }
-                            })()}
-                        )}
-
                         <li className="page-item"><a className="page-link" onClick={()=>{pagination('+1')}}>Next</a></li>
                     </ul>
                 </nav>
@@ -218,8 +185,12 @@ function pagination(data)
                 }
                 break;
             case '+1':
-                if(param !== '' && param >= 1 ) {
-                    value = parseInt(param) + 1;
+                if(param !== '' && param >=0 ) {
+                    if(param === 0 || param === null) {
+                        value = 1;
+                    }else{
+                        value = parseInt(param) + 1;
+                    }
                 }
                 break;
         }
