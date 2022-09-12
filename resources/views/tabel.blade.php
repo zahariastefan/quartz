@@ -3,15 +3,12 @@
 
     <form action="/tabel" method="get" class="d-inline-flex" id="form_tabel">
         <i class="fa fa-question-circle" aria-hidden="true"></i>
-
         <div class="col-md-4 m-2">
-
         <label for="searchTerm">
             <input type="search" class="form-control" placeholder="Cauta dupa nume" name="searchTerm" id="searchTerm" value="{{request()->get('searchTerm')}}">
         </label>
         </div>
         <div class="col-md-4 m-2">
-
             <label for="sortBy">
                 <select name="sortBy" id="sortBy">
                     <option
@@ -86,7 +83,6 @@
                 <td>{{ $salariuMediu }}</td>
             </tr>
         @endforeach
-
         </tbody>
     </table>
     {{ $angajati->links('pagination.custom_pagination') }}

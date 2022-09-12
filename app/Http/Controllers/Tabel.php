@@ -18,6 +18,7 @@ class Tabel extends Controller
     {
         $searchTerm = $request->input('searchTerm', '');
         $sortBy = $request->input('sortBy', '');
+
         $angajati = DB::table('angajatis');
         $departments = DB::table('departamentes');
         $averageSalaryByDepart = [];
@@ -55,4 +56,28 @@ class Tabel extends Controller
             'averageSalaryByDepart' => $averageSalaryByDepart
         ]);
     }
+
+    public function salariiDepartamentApi(Request $request)
+    {
+        $departments = DB::table('departamentes');
+        $averageSalaryByDepart = [];
+        foreach ($departments->get()->toArray() as $department) {
+            $idDepartment = $department->id;
+            $listAllEmployeeFromADepart = Angajatis::where('id_departament',$idDepartment)->get();
+            $listAllSalaryByDepart = [];
+            foreach ($listAllEmployeeFromADepart as $singleEmployee) {
+                $listAllSalaryByDepart[] = $singleEmployee->salariu;
+            }
+            if(count($listAllSalaryByDepart) == 0){
+                throw new InternalErrorException('Count list is Zero, something wrong');
+            }
+
+            $averageSalary = array_sum($listAllSalaryByDepart) / count($listAllSalaryByDepart);
+
+            $averageSalaryByDepart[]  = ['nume' => $department->nume, 'salariu' => number_format($averageSalary, 0)] ;
+        }
+
+        return $averageSalaryByDepart;
+    }
+
 }
