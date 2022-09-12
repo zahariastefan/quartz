@@ -59,6 +59,10 @@ td.descriere_departament{
     border: 1px solid grey !important;
 }
 
+
+.homepage button{
+    margin:203px !important;
+}
 @media( max-width: 600px){
     #form_tabel{
         position: fixed;

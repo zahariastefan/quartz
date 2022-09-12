@@ -12,8 +12,7 @@
 
 </head>
 <body>
-<div id="root"></div>
-<div id="ot"></div>
+<div id="root" class="container"></div>
 
 </body>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>

@@ -103,7 +103,7 @@ class TableApp extends React.Component {
         const ajaxCallSD = JSON.parse(Ajax(urlSalariiDep));
         const {highlightedRowId} = this.state;
         return (
-            <div className="col-md-7">
+            <div>
                 <button type="button" className="btn salary text-center" onClick={()=>{showHide()}}>Vezi Media Salariilor Pe departament</button>
                 <button type="button" className="btn classic_tabel d-none text-center" onClick={()=>{$('.salary').trigger('click')}}>Vezi Angajatii impreuna cu numele
                     si descrierea departamentului fiecaruia
@@ -163,12 +163,13 @@ class TableApp extends React.Component {
                     ))}
                     </tbody>
                 </table>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
+                <nav >
+                    <ul className="pagination justify-content-center">
                         <li className="page-item"><a className="page-link" onClick={()=>{pagination('-1')}}>Previous</a></li>
                         <li className="page-item"><a className="page-link" onClick={()=>{pagination('+1')}}>Next</a></li>
                     </ul>
                 </nav>
+                <p>Total Angajati : {ajaxCall['meta']['total']}</p>
             </div>
         );
     }

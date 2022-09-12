@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        Angajatis::factory(50)->create(function () use ($departamentNou,$arrayFunctii) {
+        Angajatis::factory(50000)->create(function () use ($departamentNou,$arrayFunctii) {
             $dep = $departamentNou[array_rand($departamentNou)];
             return [
                 'id_departament' => $dep->id,
